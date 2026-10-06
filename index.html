@@ -83,6 +83,9 @@
     text-align: left;
     overflow-wrap: anywhere;
   }
+  .adimlar { text-align: left; color: var(--soluk); margin: 16px 0 0; padding-left: 22px; }
+  .adimlar li { margin-top: 6px; }
+  .adimlar b { color: var(--yazi); font-weight: 600; }
   .kopyala {
     padding: 0 14px;
     border-radius: 8px;
@@ -102,10 +105,22 @@
     <path fill="#FFFFFF" transform="translate(164,15)" d="M0,0 H22 L40,70 L58,0 H80 L52,100 H28 Z M102,18 L120,0 H164 L182,18 V82 L164,100 H120 L102,82 Z M122,26 V74 L128,80 H156 L162,74 V26 L156,20 H128 Z M204,0 H266 L284,18 V46 L270,58 L286,100 H264 L250,62 H224 V100 H204 Z M224,20 V42 H258 L264,36 V26 L258,20 Z M308,100 L336,0 H360 L388,100 H367 L362,82 H334 L329,100 Z M339,64 H357 L348,30 Z"/>
   </svg>
 
+  <section id="baglan-bolum">
   <h1>CS2 açılıyor, sunucuya bağlanıyorsun</h1>
   <p>Sunucu: <span class="adres" id="adres">85.235.75.80:27015</span></p>
 
   <a class="dugme" id="baglan" href="steam://connect/85.235.75.80:27015">CS2'de Bağlan</a>
+  </section>
+
+  <section id="favori-bolum" hidden>
+  <h1>Sunucuyu favorilere ekle</h1>
+  <p>Steam tek tıkla favori eklemeye izin vermiyor; iki adım:</p>
+  <ol class="adimlar">
+    <li>Aşağıdaki düğmeye bas: adres kopyalanır, Steam'in sunucu penceresi açılır.</li>
+    <li><b>Favoriler</b> sekmesinde <b>Sunucu ekle</b>'ye bas, <b>Ctrl+V</b> ile yapıştır, <b>Bu adresi favorilere ekle</b>'ye bas.</li>
+  </ol>
+  <a class="dugme" id="favori" href="steam://open/servers">Adresi kopyala ve Steam'i aç</a>
+  </section>
 
   <div class="yedek">
     <p>Tarayıcı "Steam açılsın mı?" diye sorarsa izin ver. Açılmazsa CS2 konsoluna (<code>~</code>) yaz:</p>
@@ -116,8 +131,26 @@
   </div>
 </main>
 <script>
-  // Sayfa açılınca bir kez dener; tarayıcı engellerse düğme duruyor.
-  setTimeout(function () { window.location.href = document.getElementById('baglan').href; }, 400);
+  // #favori: Discord'daki "Favorilere Ekle" düğmesi; bağlanmayı denemez, favori adımlarını gösterir.
+  var favori = window.location.hash === '#favori';
+  document.getElementById('favori-bolum').hidden = !favori;
+  document.getElementById('baglan-bolum').hidden = favori;
+  if (!favori) {
+    // Sayfa açılınca bir kez dener; tarayıcı engellerse düğme duruyor.
+    setTimeout(function () { window.location.href = document.getElementById('baglan').href; }, 400);
+  }
+
+  // Panoya yazma tıklamayla izinli: önce adres kopyalanır, sonra Steam'in sunucu penceresi açılır.
+  document.getElementById('favori').addEventListener('click', function (olay) {
+    var hedef = this.href;
+    olay.preventDefault();
+    var ac = function () { window.location.href = hedef; };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(document.getElementById('adres').textContent).then(ac, ac);
+    } else {
+      ac();
+    }
+  });
 
   document.getElementById('kopyala').addEventListener('click', function () {
     var dugme = this;
