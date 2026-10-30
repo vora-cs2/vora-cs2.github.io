@@ -113,11 +113,20 @@
         <h2>Discord</h2>
       </div>
       <ul>
-        <li>Duyurular, maç saatleri, sohbet</li>
-        <li>Bu pencerede giriş isterse <b>Discord uygulamasında aç</b></li>
+        <li><span class="bonus">Her tur +1000 $</span>: katıl, oyunda <b>!dcbagla</b> yaz, hesabını bağla</li>
+        <li>Duyurular, maç saatleri, sohbet, ban affı</li>
       </ul>
-      <a class="dugme" href="https://discord.gg/QJ3ZyKMcp4">Discord'a katıl</a>
+      <a class="dugme" id="dc-ana" href="https://discord.gg/QJ3ZyKMcp4">Discord'a katıl</a>
       <a class="ikinci" href="discord://-/invite/QJ3ZyKMcp4">Discord uygulamasında aç</a>
+      <!-- Oyunun içinden (Steam katmanı) açılınca Discord oturumu yok: ana düğme daveti oyuncunun kendi tarayıcısında açar
+           (steam://openurl_external), orada Discord açık oturumla ya da uygulamayla tek tıkla katılır. Normal tarayıcıda değişmez. -->
+      <script>
+        if (/Valve Steam/i.test(navigator.userAgent)) {
+          var dc = document.getElementById("dc-ana");
+          dc.href = "steam://openurl_external/https://discord.gg/QJ3ZyKMcp4";
+          dc.textContent = "Discord'a katıl (tarayıcında açılır)";
+        }
+      </script>
     </section>
   </div>
 
